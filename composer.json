@@ -1,0 +1,7 @@
+{
+    "name": "php-utils/class-finder",
+    "description": "Class finder utility",
+    "autoload": {
+        "psr-4": { "ClassFinder\\": "src/" }
+    }
+}
