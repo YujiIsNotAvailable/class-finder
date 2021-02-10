@@ -11,7 +11,7 @@ Check this package.
 
 ## Instalation ##
 ```
-composer require php-utils-class-finder
+composer require yj-php-utils-class-finder
 ```
 
 ## Usage ##
