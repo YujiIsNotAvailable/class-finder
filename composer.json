@@ -1,6 +1,17 @@
 {
-    "name": "php-utils/class-finder",
+    "name": "yj-php-utils/class-finder",
     "description": "Class finder utility",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gabriel Yuji",
+            "email": "gabriel.yuji.dev@hotmail.com",
+            "homepage": "https://github.com/yujiisnotavailable"
+        }
+    ],
+    "require": {
+        "php": ">=7.3"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.3"
     },
