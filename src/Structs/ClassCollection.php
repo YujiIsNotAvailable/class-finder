@@ -14,6 +14,10 @@ class ClassCollection implements \IteratorAggregate
         }, $classes);
     }
 
+    private function refreshIndex(): void
+    {
+        $this->classes = array_values($this->classes);
+    }
 
     public function add(string $path): self
     {
@@ -24,13 +28,21 @@ class ClassCollection implements \IteratorAggregate
     public function delete(string $path): self
     {
         $key = array_search($path, $this->classes);
-        if ($key) unset($this->classes[$key]);
+        if ($key !== false) {
+            unset($this->classes[$key]);
+            $this->refreshIndex();
+        }
         return $this;
     }
 
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->classes);
+    }
+
+    public function callback(\Closure $callback): array
+    {
+        return array_map(fn(string $class) => $callback($class), $this->classes);
     }
 
     public function filter(FinderFilters $filters): self

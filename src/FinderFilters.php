@@ -4,7 +4,7 @@ namespace ClassFinder;
 use ClassFinder\Filters;
 class FinderFilters
 {
-    private ?Filters\ShouldExtends $implements;
+    private ?Filters\ShouldImplements $implements;
     
     private ?Filters\ShouldExtends $extends;
     
@@ -35,17 +35,17 @@ class FinderFilters
     public function apply(ClassCollection $classes): ClassCollection
     {
         foreach ($classes as $class) {
-            if ($this->extends && !$this->extends->check($class)) {
+            if (isset($this->extends) && !$this->extends->check($class)) {
                 $classes->delete($class);
                 continue;
             }
 
-            if ($this->implements && !$this->implements->check($class)) {
+            if (isset($this->implements) && !$this->implements->check($class)) {
                 $classes->delete($class);
                 continue;
             }
 
-            if ($this->callback && !$this->callback->check($class)) {
+            if (isset($this->callback) && !$this->callback->check($class)) {
                 $classes->delete($class);
                 continue;
             }

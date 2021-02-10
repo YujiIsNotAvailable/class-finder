@@ -3,18 +3,23 @@ namespace ClassFinder;
 
 class NamespaceFinder
 {
-    use FinderTrait;
+    use FinderTrait {
+        FinderTrait::__construct as protected finderTraitConstruct;
+    }
+
     private string $namespace;
 
     private function getFiles(): FileCollection
     {
         // pass by all files in namespace and return
-        return DirFinder::fromNamespace($this->namespace)->getFiles();
+        return DirFinder::fromNamespace($this->basePath, $this->namespace)->getFiles();
     }
 
-    public function __construct(string $namespace)
+    public function __construct(string $basePath, string $namespace)
     {
         $this->namespace = $namespace;
+        $this->basePath = $basePath;
+        $this->finderTraitConstruct();
     }
 
     public function get(): ClassCollection

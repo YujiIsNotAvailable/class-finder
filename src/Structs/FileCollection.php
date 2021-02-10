@@ -25,6 +25,8 @@ class FileCollection implements \IteratorAggregate
 
     public function toClassCollection(): ClassCollection
     {
-        return new ClassCollection(array_map(fn(string $filepath) => new File($filepath), $this->files));
+        return new ClassCollection(array_map(function(File $file) {
+            return $file->getFullyQualifiedName();
+        }, $this->files));
     }
 }

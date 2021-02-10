@@ -8,27 +8,31 @@ class File
     public function __construct(string $path)
     {
         if (!is_file($path)) throw new \InvalidArgumentException("Path $path is not a file.");
-        
         $this->path = $path;
     }
 
-    public function getNamespace(): string
+    private function getTokenValues(int $token): array
     {
         $fileTokens = token_get_all(file_get_contents($this->path));
-        $nsTokensKeys = \array_search(\T_NAMESPACE, array_map(
+        $nsTokensKeys = \array_search($token, array_map(
             fn($data) => $data[0], 
             $fileTokens
         ));
 
-        $nsTokens = array_values(array_map(function($arr) {
+        return array_values(array_map(function($arr) {
             return $arr[1];
         }, array_filter(
-            array_map(
-                fn($data) => $data[2] == $fileTokens[$nsTokensKeys][2] ? $data : null,
+            array_map(function($data) use($fileTokens, $nsTokensKeys) {
+                return isset($data[2]) && ($data[2] == $fileTokens[$nsTokensKeys][2]) ? $data : null;
+            },
                 $fileTokens
             )
         )));
-        
+    }
+
+    public function getNamespace(): string
+    {
+        $nsTokens = $this->getTokenValues(T_NAMESPACE);
         return trim(implode(array_splice($nsTokens, 2, count($nsTokens))));
     }
 
@@ -43,8 +47,9 @@ class File
         $classTokens = array_values(array_map(function($arr) {
             return $arr[1];
         }, array_filter(
-            array_map(
-                fn($data) => $data[2] == $fileTokens[$classTokensKey][2] ? $data : null,
+            array_map(function($data) use($fileTokens, $classTokensKey) {
+                return isset($data[2]) && ($data[2] == $fileTokens[$classTokensKey][2]) ? $data : null;
+            },
                 $fileTokens
             )
         )));
@@ -54,6 +59,6 @@ class File
 
     public function getFullyQualifiedName(): string
     {
-        return $this->getNamespace().$this->getClass();
+        return $this->getNamespace().DIRECTORY_SEPARATOR.$this->getClass();
     }
 }
