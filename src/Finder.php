@@ -3,15 +3,13 @@ namespace ClassFinder;
 
 class Finder
 {
-    static public function findClassesByNamespace(string $basePath, string $namespace)
+    static public function findClassesInNamespace(string $basePath, string $namespace)
     {
         return new NamespaceFinder($basePath, $namespace);
     }
 
-    static public function findClassesByPath(string $path)
+    static public function findClassesInPath(string $basePath, string $path)
     {
-        
+        return new PathFinder($basePath, $path);
     }
-
-
 }

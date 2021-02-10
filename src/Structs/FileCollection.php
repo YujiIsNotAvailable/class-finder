@@ -1,5 +1,5 @@
 <?php
-namespace ClassFinder;
+namespace ClassFinder\Structs;
 
 class FileCollection implements \IteratorAggregate
 {
@@ -25,8 +25,8 @@ class FileCollection implements \IteratorAggregate
 
     public function toClassCollection(): ClassCollection
     {
-        return new ClassCollection(array_map(function(File $file) {
-            return $file->getFullyQualifiedName();
-        }, $this->files));
+        return new ClassCollection(array_filter(array_map(function(File $file) {
+            if ($file->isClass()) return $file->getFullyQualifiedName();
+        }, $this->files)));
     }
 }

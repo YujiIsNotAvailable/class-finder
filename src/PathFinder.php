@@ -3,23 +3,23 @@ namespace ClassFinder;
 
 use ClassFinder\Structs;
 
-class NamespaceFinder
+class PathFinder
 {
     use FinderTrait {
         FinderTrait::__construct as protected finderTraitConstruct;
     }
 
-    private string $namespace;
+    private string $path;
 
     private function getFiles(): Structs\FileCollection
     {
-        return DirFinder::fromNamespace($this->basePath, $this->namespace)->getFiles();
+        return (new DirFinder($this->path))->getfiles();
     }
 
-    public function __construct(string $basePath, string $namespace)
+    public function __construct(string $basePath, string $path)
     {
         $this->basePath = $basePath;
-        $this->namespace = $namespace;
+        $this->path = $path;
         $this->finderTraitConstruct();
     }
 

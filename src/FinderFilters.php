@@ -26,13 +26,13 @@ class FinderFilters
         return $this;
     }
 
-    public function when(\Closure $callback)
+    public function where(\Closure $callback)
     {
         $this->callback = new Filters\Callback($callback);
         return $this;
     }
 
-    public function apply(ClassCollection $classes): ClassCollection
+    public function apply(Structs\ClassCollection $classes): Structs\ClassCollection
     {
         foreach ($classes as $class) {
             if (isset($this->extends) && !$this->extends->check($class)) {
@@ -50,6 +50,7 @@ class FinderFilters
                 continue;
             }
         }
+        
         return $classes;
     }
 

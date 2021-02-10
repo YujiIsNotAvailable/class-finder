@@ -1,5 +1,6 @@
 <?php
 namespace ClassFinder;
+use ClassFinder\Structs;
 
 class DirFinder
 {
@@ -8,17 +9,18 @@ class DirFinder
 
     public function __construct(string $dir)
     {
+        if (!is_dir($dir)) throw new Exceptions\InvalidPath("'{$dir}' is not a valid directory path.");
         $this->dir = $dir;
     }
 
-    public function getFiles(): FileCollection
+    public function getFiles(): Structs\FileCollection
     {
         $dirContent = scandir($this->dir);
-        $collection = new FileCollection();
+        $collection = new Structs\FileCollection();
 
         array_map(function(string $_path) use($collection) {
             $path = $this->dir.DIRECTORY_SEPARATOR.$_path;
-            if (is_file($path)) $collection->add(new File($path));
+            if (is_file($path)) $collection->add(new Structs\File($path));
         }, $dirContent);
 
         return $collection;
@@ -31,12 +33,11 @@ class DirFinder
 
     static public function fromNamespace(string $basePath, string $namespace): self
     {
-        $dir = str_replace($namespace, DIRECTORY_SEPARATOR, '\\');
-        
         $_composerJsonPath = $basePath.DIRECTORY_SEPARATOR.'composer.json';
-        $composerJson = json_decode(file_get_contents($_composerJsonPath));
+        if (!is_file($_composerJsonPath)) throw new Exceptions\InvalidPath("'{$_composerJsonPath}' is not a valid file path.");
 
-        if (!$composerJson) throw new \Exception("File {$_composerJsonPath} not found.");
+        $composerJson = json_decode(file_get_contents($_composerJsonPath));
+        if (!$composerJson) throw new Exceptions\InvalidPath("File '{$_composerJsonPath}' not found.");
         $classes = (array)$composerJson->autoload->{'psr-4'};
 
         $namespaceExploded = explode("\\", $namespace);
@@ -47,11 +48,10 @@ class DirFinder
         unset($namespaceExploded[$_index]);
 
         $baseDir = $classes[$base] ?? null;
-        if (!$baseDir) throw new \Exception("Namespace {$base} not loaded on {$_composerJsonPath}");
+        if (!$baseDir) throw new Exceptions\InvalidNamespace("Namespace '{$base}' not loaded on {$_composerJsonPath}");
 
         $path = $basePath.DIRECTORY_SEPARATOR.$baseDir;
         do {
-            dump($path);
             $path .= DIRECTORY_SEPARATOR.$namespaceExploded[++$_index];
             unset($namespaceExploded[$_index]);
         } while ($namespaceExploded);

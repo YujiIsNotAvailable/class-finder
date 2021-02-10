@@ -1,5 +1,8 @@
 <?php
-namespace ClassFinder;
+namespace ClassFinder\Structs;
+
+use ClassFinder\FinderFilters;
+use ClassFinder\Exceptions;
 
 class ClassCollection implements \IteratorAggregate
 {
@@ -8,7 +11,7 @@ class ClassCollection implements \IteratorAggregate
     public function __construct(array $classes = [])
     {
         array_map(function(string $namespace) {
-            if (!class_exists($namespace)) throw new \Exception("Namespace $namespace does not exists.");
+            if (!class_exists($namespace)) throw new Exceptions\InvalidClass("Class '{$namespace}' does not exists.");
 
             $this->classes[] = $namespace;
         }, $classes);

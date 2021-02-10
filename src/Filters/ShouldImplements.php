@@ -3,19 +3,19 @@ namespace ClassFinder\Filters;
 
 class ShouldImplements implements IFilter
 {
-    private array $classes = [];
-    public function __construct(array $classes = [])
+    private array $interfaces = [];
+    public function __construct(array $interfaces = [])
     {
-        $this->classes = $classes;
+        $this->interfaces = $interfaces;
     }
 
     /**
-     * Check if namespace extends all of $this->classes;
+     * Check if namespace implements all of $this->interfaces;
      */
     public function check(string $namespace): bool
     {
-        foreach ($this->classes as $class) {
-            if (!in_array($namespace, class_implements($class))) return false;
+        foreach ($this->interfaces as $class) {
+            if (!in_array($class, class_implements($namespace))) return false;
         }
         return true;
     }
