@@ -34,12 +34,9 @@ class PathFinderTest extends TestCase
         $this->assertEquals(
             new ClassCollection([
                 "ClassFinder\DirFinder",
-                "ClassFinder\FinderFilters",
-                "ClassFinder\NamespaceFinder",
-                "ClassFinder\PathFinder",
             ]), 
             Finder::findClassesInPath($this->basePath, $this->basePath.DIRECTORY_SEPARATOR.'/src')
-                ->where(fn(string $namespace) => strlen($namespace) > 18)
+                ->where(fn(string $namespace) => method_exists($namespace, 'fromNamespace'))
                 ->get()
         );
     }
