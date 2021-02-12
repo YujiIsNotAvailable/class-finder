@@ -37,7 +37,7 @@ class File
 
     public function isClass(): bool
     {
-        return isset($this->getTokenValues(T_CLASS)[self::TOKEN_TYPE_KEY]);
+        return isset($this->getTokenValues(T_CLASS)[self::TOKEN_TYPE_KEY]) && isset($this->getTokenValues(T_CLASS)[0]) && $this->getTokenValues(T_CLASS)[0] == 'class';
     }
 
     public function getNamespace(): string

@@ -17,12 +17,10 @@ class DirFinder
     {
         $dirContent = scandir($this->dir);
         $collection = new Structs\FileCollection();
-
         array_map(function(string $_path) use($collection) {
             $path = $this->dir.DIRECTORY_SEPARATOR.$_path;
             if (is_file($path)) $collection->add(new Structs\File($path));
         }, $dirContent);
-
         return $collection;
     }
 
@@ -55,7 +53,6 @@ class DirFinder
             $path .= DIRECTORY_SEPARATOR.$namespaceExploded[++$_index];
             unset($namespaceExploded[$_index]);
         } while ($namespaceExploded);
-        
         return new self($path);
     }
 }
